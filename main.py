@@ -48,6 +48,7 @@ async def on_message(message):
     user = await bot.db.get_user(message.author.id)
     if any(re.search(trg,message.content) != None for trg in revoreleasetriggers):
         embed = discord.Embed(title=f"Revo will ship early january, {message.author.name}!", url="https://e3d-online.com/blogs/news/rapidchangerevo",description = f"Read more here: https://e3d-online.com/blogs/news/rapidchangerevo")
+        await message.channel.send(embed=embed)
 
 async def leaderboard(ctx):
     usrnum = 1
