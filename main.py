@@ -38,11 +38,11 @@ async def on_connect():
 
 @bot.listen()
 async def on_message(message):
+    if message.author.bot:
+        return 
     if str(message.channel.type) == "private":
         await message.channel.send("Hey there! I dont answer to dms yet.")
         return
-    if message.author.bot:
-        return 
     if message.author == bot.user:
         return
     user = await bot.db.get_user(message.author.id)
