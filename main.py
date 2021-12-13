@@ -15,7 +15,7 @@ from discord.utils import get
 
 bot = commands.Bot(command_prefix = '>', activity=discord.Game(name="Helping people (I think :p)"))
 TOKEN = os.getenv('BOT_TOKEN')
-guild = bot.get_guild(756501859702800426)
+guild = bot.get_guild(919710676056965120)
 DATABASE_URL = os.environ['DATABASE_URL']
 bot.db = Database()
 roleList = []
@@ -23,7 +23,7 @@ revoreleasetriggers = ["REVO RELEASE"]
 
 @bot.event
 async def on_ready():
-    bot.guild = bot.get_guild(756501859702800426)
+    bot.guild = bot.get_guild(919710676056965120)
     await bot.change_presence(status=discord.Status.online, activity=discord.Game('Helping people (I think :p)'))
     print("--------------------")
     print('Logged in as')
@@ -39,7 +39,7 @@ async def on_connect():
 @bot.listen()
 async def on_message(message):
     if str(message.channel.type) == "private":
-        await message.channel.send(Text="Hey there! I dont answer to dms yet.")
+        await message.channel.send("Hey there! I dont answer to dms yet.")
         return
     if message.author.bot:
         return 
