@@ -13,7 +13,7 @@ from typing import Text, Tuple
 from math import sqrt
 from discord.utils import get
 
-bot = commands.Bot(command_prefix = '>', intents=Intents.all(), activity=discord.Game(name="Helping people (I think :p)"))
+bot = commands.Bot(command_prefix = '>', activity=discord.Game(name="Helping people (I think :p)"))
 TOKEN = os.getenv('BOT_TOKEN')
 guild = bot.get_guild(756501859702800426)
 DATABASE_URL = os.environ['DATABASE_URL']
