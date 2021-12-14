@@ -1,2 +1,2 @@
 # E3Dbot
-Yeah 
+Suggest triggers and ideas in the issues tab
