@@ -19,7 +19,7 @@ guild = bot.get_guild(919710676056965120)
 DATABASE_URL = os.environ['DATABASE_URL']
 bot.db = Database()
 roleList = []
-revoreleasetriggers = ["revo release"]
+revoreleasetriggers = ["revo release","revo  be released"]
 
 @bot.event
 async def on_ready():
@@ -50,7 +50,8 @@ async def on_message(message):
         embed = discord.Embed(title=f"Revo will ship early january, {message.author.name}!", url="https://e3d-online.com/blogs/news/rapidchangerevo",description = f"Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo")
         embed.set_image(url="https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
         await message.channel.send(embed=embed)
-
+        
+@bot.command()
 async def leaderboard(ctx):
     usrnum = 1
     embed = discord.Embed(
