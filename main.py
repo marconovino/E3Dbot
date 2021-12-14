@@ -12,6 +12,7 @@ from db import Database
 from typing import Text, Tuple
 from math import sqrt
 from discord.utils import get
+from discord_webhook import DiscordWebhook
 
 bot = commands.Bot(command_prefix = '>', activity=discord.Game(name="Helping people (I think :p)"))
 TOKEN = os.getenv('BOT_TOKEN')
@@ -25,11 +26,14 @@ revoreleasetriggers = ["revo release","revo  be released"]
 async def on_ready():
     bot.guild = bot.get_guild(919710676056965120)
     await bot.change_presence(status=discord.Status.online, activity=discord.Game('Helping people (I think :p)'))
-    print("--------------------")
+    print("--------------------") 
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('--------------------')
+    webhook = DiscordWebhook(url='https://discord.com/api/webhooks/920341408995504168/SGVGuVX3IaCsqS5F5tdMf56QfIJfHk9_BYlQIpE3D7GgiyKcNO1s56SXYQRgL55f2fv8', rate_limit_retry=True, content=f'-------------------- \n Logged in as \n {bot.user.name} \n {bot.user.id} \n --------------------')
+    response = webhook.execute()
+
 
 @bot.listen()
 async def on_connect():
@@ -50,7 +54,7 @@ async def on_message(message):
         embed = discord.Embed(title=f"Revo will ship early january, {message.author.name}!", url="https://e3d-online.com/blogs/news/rapidchangerevo",description = f"Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo")
         embed.set_image(url="https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
         await message.channel.send(embed=embed)
-        
+
 @bot.command()
 async def leaderboard(ctx):
     usrnum = 1
