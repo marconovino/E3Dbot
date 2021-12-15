@@ -85,7 +85,7 @@ async def on_message(message):
     user = await bot.db.get_user(message.author.id)
     for x in embedTriggers:
         if x in message.content:
-            message.channel.send(embed=acquireEmbed(message.content, message.author.name))
+            await message.channel.send(embed=acquireEmbed(message.content, message.author.name))
        
 
 @bot.command()
