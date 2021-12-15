@@ -98,6 +98,7 @@ async def on_connect():
 # function to build the embed according to the trigger, moved it to a function to keep it tidier
 def acquireEmbed(inputMessage, authorName):
     message = inputMessage.lower()
+    print(message)
     if "support" or "help" and "print" or "tc" in message:
         embedTitle = suppEmbed.title
         embedURL = suppEmbed.url
