@@ -25,7 +25,7 @@ startupWebhook = os.getenv('STARTUP')
 roleList = []
 
 #triggers that would cause it to check for FAQs
-embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", "refund", "support", "help", "beta"]
+embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", "refund", "support", "help", "issues", "beta"]
 
 class discordEmbed: #discord embed properties, condensed into classes and objects for easy indexing
   def __init__(self, key, title, url, description, image):
@@ -96,13 +96,20 @@ async def on_connect():
     print("database loaded")
 
 # function to build the embed according to the trigger, moved it to a function to keep it tidier
-def acquireEmbed(message, authorName):
+def acquireEmbed(inputMessage, authorName):
+    message = inputMessage.lower()
     if "support" or "help" in message:
         embedTitle = suppEmbed.title
         embedURL = suppEmbed.url
         embedDescription = suppEmbed.description
         embedImage = suppEmbed.image
     
+    if "help" and "printer" in message:
+        embedTitle = suppEmbed.title
+        embedURL = suppEmbed.url
+        embedDescription = suppEmbed.description
+        embedImage = suppEmbed.image
+
     if "revo" and "release" in message:
         embedTitle = revoEmbed.title.replace("authorName", authorName) #insert authorName where you want the bot to place the name of the person who asked
         embedURL = revoEmbed.url
