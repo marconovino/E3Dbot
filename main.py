@@ -151,7 +151,8 @@ async def on_message(message):
         return
     user = await bot.db.get_user(message.author.id)
     for x in embedTriggers:
-        if x in message.content:
+        lowerMessage = message.content.lower()
+        if x in lowerMessage:
             await message.channel.send(embed=acquireEmbed(message.content, message.author.name))
        
 #ignore the leaderboard, not usable yet since there is no xp rewards
