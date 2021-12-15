@@ -25,9 +25,9 @@ startupWebhook = os.getenv('STARTUP')
 roleList = []
 
 #triggers that would cause it to check for FAQs
-embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", "refund", "beta"]
+embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", "refund", "support", "help", "beta"]
 
-class discordEmbed:
+class discordEmbed: #discord embed properties, condensed into classes and objects for easy indexing
   def __init__(self, key, title, url, description, image):
     self.key = key #the name of the embed internally
     self.title = title #top text of the embed
@@ -58,6 +58,23 @@ brexitEmbed = discordEmbed("brexit",
                            "Here's what we know:\nhttps://e3d-online.com/blogs/news/brexit\nIf you'd like to get an estimate of shipping and customs costs before buying something, please open a ticket with customer support who can help you further:\nhttps://e3d-online.com/pages/contact-us",
                            "https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/BREXIT_350x.jpg?v=1612267837")
 
+docuEmbed = discordEmbed("docu",
+                         "Where can I find documentation?",
+                         "https://e3d-online.zendesk.com/hc/en-us",
+                         "Latest documentation: https://e3d-online.zendesk.com/hc/en-us\nLegacy documentation: https://e3d-online.dozuki.com/c/Root\n(We're in the process of moving everything over to ZenDesk. Some info can still be found on Dozuki)\nDocumentation can be found pinned under each product help channel respectively. If you think something is missing, feel free to @ any of our team.",
+                         "https://theme.zdassets.com/theme_assets/1210792/c64cdacf7096bc8e38724270bdf1680060b86893.svg")
+
+suppEmbed = discordEmbed("support",
+                         "I'm having issues with my printer, what should I do?", 
+                         "https://e3d-online.zendesk.com/hc/en-us",
+                         "Write a message in one of the help channels relating to the E3D product you're having issues with, and we'll be happy to help you out.\nIf it's related to purchase, refunds etc. visit https://e3d-online.com/pages/contact-us, open a ticket and the E3D support team will be happy to help.",
+                         "https://theme.zdassets.com/theme_assets/1210792/c64cdacf7096bc8e38724270bdf1680060b86893.svg")
+
+betaEmbed = discordEmbed("beta",
+                         "Is there a channel to discuss beta products here?",
+                         "https://e3d-online.zendesk.com/hc/en-us/requests/new?ticket_form_id=360000243458",
+                         "No, sorry.\nWe have dedicated forums for beta programs as we need to track all information about beta products in once place. Please use that forum to discuss anything in the beta program.\nIf you'd like to join the beta program, you can do it here: https://e3d-online.zendesk.com/hc/en-us/requests/new?ticket_form_id=360000243458",
+                         "")
 
 #dont mess with the on ready event or the on connect event
 
@@ -91,6 +108,32 @@ def acquireEmbed(message, authorName):
         embedURL = hemerestockEmbed.url
         embedDescription = hemerestockEmbed.description
         embedImage = hemerestockEmbed.image
+    
+    if "brexit" in message:
+        embedTitle = brexitEmbed.title
+        embedURL = brexitEmbed.url
+        embedDescription = brexitEmbed.description
+        embedImage = brexitEmbed.image
+    
+    if "documentation" in message:
+        embedTitle = docuEmbed.title
+        embedURL = docuEmbed.url
+        embedDescription = docuEmbed.description
+        embedImage = docuEmbed.image
+
+    if "support" or "help" in message:
+        embedTitle = suppEmbed.title
+        embedURL = suppEmbed.url
+        embedDescription = suppEmbed.description
+        embedImage = suppEmbed.image
+    
+    if "beta" in message:
+        embedTitle = betaEmbed.title
+        embedURL = betaEmbed.url
+        embedDescription = betaEmbed.description
+        embedImage = betaEmbed.image
+
+
 
     embed = discord.Embed(title= embedTitle, url= embedURL ,description = embedDescription)
     embed.set_image(url= embedImage)
