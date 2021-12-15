@@ -14,27 +14,52 @@ from math import sqrt
 from discord.utils import get
 from discord_webhook import DiscordWebhook
 
+#you shouldnt touch any of this ngl 
 
 bot = commands.Bot(command_prefix = '>', activity=discord.Game(name="Helping people (I think :p)"))
 TOKEN = os.getenv('BOT_TOKEN')
 guild = bot.get_guild(919710676056965120)
 DATABASE_URL = os.environ['DATABASE_URL']
 bot.db = Database()
+startupWebhook = os.getenv('STARTUP')
 roleList = []
-embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", ]
+
+#triggers that would cause it to check for FAQs
+embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", "refund", "beta"]
 
 class discordEmbed:
   def __init__(self, key, title, url, description, image):
-    self.key = key
-    self.title = title
-    self.url = url
-    self.description = description
-    self.image = image
+    self.key = key #the name of the embed internally
+    self.title = title #top text of the embed
+    self.url = url #url where you are sent when you click the title
+    self.description = description #big paragraph of text
+    self.image = image #link to image that shows under the description
 
-revoEmbed = discordEmbed("revo","Revo will ship early january, authorName!","https://e3d-online.com/blogs/news/rapidchangerevo","Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo","https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
-hemerestockEmbed = discordEmbed("hemerestock","It is restocked!","https://e3d-online.com/blogs/news/hemera-back-in-stock","Buy one today!\nhttps://e3d-online.com/blogs/news/hemera-back-in-stock","https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/Hemera_reflection_front_tiled_16_9_6097ee2d-0c83-45fd-95a7-1a68a0fb07ac_350x.jpg?v=1610971099")
-brexitEmbed = discordEmbed("brexit","Good question.","https://e3d-online.com/blogs/news/brexit","Here's what we know:\nhttps://e3d-online.com/blogs/news/brexit\nIf you'd like to get an estimate of shipping and customs costs before buying something, please open a ticket with customer support who can help you further:\nhttps://e3d-online.com/pages/contact-us","https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/BREXIT_350x.jpg?v=1612267837")
+    #none of these are necessart and can be blank
+    #remember to use the newline character (\n) to insert an enter
+    #add "authorName" where you want the bot to put the name of the sender
 
+
+revoEmbed = discordEmbed("revo",
+                         "Revo will ship early january, authorName!",
+                         "https://e3d-online.com/blogs/news/rapidchangerevo",
+                         "Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo",
+                         "https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
+
+hemerestockEmbed = discordEmbed("hemerestock",
+                                "It is restocked!",
+                                "https://e3d-online.com/blogs/news/hemera-back-in-stock",
+                                "Buy one today!\nhttps://e3d-online.com/blogs/news/hemera-back-in-stock",
+                                "https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/Hemera_reflection_front_tiled_16_9_6097ee2d-0c83-45fd-95a7-1a68a0fb07ac_350x.jpg?v=1610971099")
+
+brexitEmbed = discordEmbed("brexit",
+                           "Good question.",
+                           "https://e3d-online.com/blogs/news/brexit",
+                           "Here's what we know:\nhttps://e3d-online.com/blogs/news/brexit\nIf you'd like to get an estimate of shipping and customs costs before buying something, please open a ticket with customer support who can help you further:\nhttps://e3d-online.com/pages/contact-us",
+                           "https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/BREXIT_350x.jpg?v=1612267837")
+
+
+#dont mess with the on ready event or the on connect event
 
 @bot.event
 async def on_ready():
@@ -45,18 +70,18 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('--------------------')
-    webhook = DiscordWebhook(url='https://discord.com/api/webhooks/920341408995504168/SGVGuVX3IaCsqS5F5tdMf56QfIJfHk9_BYlQIpE3D7GgiyKcNO1s56SXYQRgL55f2fv8', rate_limit_retry=True, content=f'-------------------- \n Logged in as \n {bot.user.name} \n {bot.user.id} \n --------------------')
+    webhook = DiscordWebhook(url=startupWebhook, rate_limit_retry=True, content=f'-------------------- \n Logged in as \n {bot.user.name} \n {bot.user.id} \n --------------------')
     response = webhook.execute()
-
 
 @bot.listen()
 async def on_connect():
     await bot.db.setup()
     print("database loaded")
 
+# function to build the embed according to the trigger, moved it to a function to keep it tidier
 def acquireEmbed(message, authorName):
     if "revo" and "release" in message:
-        embedTitle = revoEmbed.title.replace("authorName", authorName)
+        embedTitle = revoEmbed.title.replace("authorName", authorName) #insert authorName where you want the bot to place the name of the person who asked
         embedURL = revoEmbed.url
         embedDescription = revoEmbed.description
         embedImage = revoEmbed.image
@@ -71,6 +96,7 @@ def acquireEmbed(message, authorName):
     embed.set_image(url= embedImage)
     return embed 
 
+#here is where the magic happens
 @bot.listen()
 async def on_message(message):
     if message.author.bot:
@@ -85,7 +111,7 @@ async def on_message(message):
         if x in message.content:
             await message.channel.send(embed=acquireEmbed(message.content, message.author.name))
        
-
+#ignore the leaderboard, not usable yet since there is no xp rewards
 @bot.command()
 async def leaderboard(ctx):
     usrnum = 1
@@ -99,6 +125,7 @@ async def leaderboard(ctx):
         usrnum = usrnum + 1
     await ctx.send(embed=embed)
 
+#leave this guy alone unless you want to add a feature to it
 @bot.command(aliases=["whois"])
 async def userinfo(ctx, member: discord.Member = None):
     if not member:
@@ -120,10 +147,6 @@ async def userinfo(ctx, member: discord.Member = None):
     print(member.top_role.mention)
     await ctx.send(embed=embed)
 
-@bot.command()
-async def unban(ctx, member: discord.Member = None):
-    member.unban()
-
 @bot.event
 async def on_command_error(ctx, error):
     logging.error(f'Error on command {ctx.invoked_with}, {error}')
@@ -144,6 +167,4 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
         raise error
 
-
-
-bot.run(TOKEN)
+bot.run(TOKEN) #starts the nuclear reactor
