@@ -14,13 +14,27 @@ from math import sqrt
 from discord.utils import get
 from discord_webhook import DiscordWebhook
 
+
 bot = commands.Bot(command_prefix = '>', activity=discord.Game(name="Helping people (I think :p)"))
 TOKEN = os.getenv('BOT_TOKEN')
 guild = bot.get_guild(919710676056965120)
 DATABASE_URL = os.environ['DATABASE_URL']
 bot.db = Database()
 roleList = []
-revoreleasetriggers = ["revo release","revo  be released"]
+embedTriggers = ["revo release","revo be released","hemera be restocked", "hemera stock", "brexit", "documentation", ]
+
+class discordEmbed:
+  def __init__(self, key, title, url, description, image):
+    self.key = key
+    self.title = title
+    self.url = url
+    self.description = description
+    self.image = image
+
+revoEmbed = discordEmbed("revo","Revo will ship early january, authorName!","https://e3d-online.com/blogs/news/rapidchangerevo","Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo","https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
+hemerestockEmbed = discordEmbed("hemerestock","It is restocked!","https://e3d-online.com/blogs/news/hemera-back-in-stock","Buy one today!\nhttps://e3d-online.com/blogs/news/hemera-back-in-stock","https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/Hemera_reflection_front_tiled_16_9_6097ee2d-0c83-45fd-95a7-1a68a0fb07ac_350x.jpg?v=1610971099")
+brexitEmbed = discordEmbed("brexit","Good question.","https://e3d-online.com/blogs/news/brexit","Here's what we know:\nhttps://e3d-online.com/blogs/news/brexit\nIf you'd like to get an estimate of shipping and customs costs before buying something, please open a ticket with customer support who can help you further:\nhttps://e3d-online.com/pages/contact-us","https://cdn.shopify.com/s/files/1/0259/1948/8059/articles/BREXIT_350x.jpg?v=1612267837")
+
 
 @bot.event
 async def on_ready():
@@ -40,6 +54,25 @@ async def on_connect():
     await bot.db.setup()
     print("database loaded")
 
+def acquireEmbed(message, authorName):
+    if "revo" and "release" in message:
+        RAWembedTitle = revoEmbed.title 
+        RAWembedTitle.replace("authorName", authorName)
+        embedTitle = RAWembedTitle
+        embedURL = revoEmbed.url
+        embedDescription = revoEmbed.description
+        embedImage = revoEmbed.image
+
+    if "hemera" and "stock" in message:
+        embedTitle = hemerestockEmbed.title
+        embedURL = hemerestockEmbed.url
+        embedDescription = hemerestockEmbed.description
+        embedImage = hemerestockEmbed.image
+
+    embed = discord.Embed(title= embedTitle, url= embedURL ,description = embedDescription)
+    embed.set_image(url= embedImage)
+    return embed 
+
 @bot.listen()
 async def on_message(message):
     if message.author.bot:
@@ -50,10 +83,10 @@ async def on_message(message):
     if message.author == bot.user:
         return
     user = await bot.db.get_user(message.author.id)
-    if any(re.search(trg,message.content) != None for trg in revoreleasetriggers):
-        embed = discord.Embed(title=f"Revo will ship early january, {message.author.name}!", url="https://e3d-online.com/blogs/news/rapidchangerevo",description = f"Read more about the Revo(lution) here: \n https://e3d-online.com/blogs/news/rapidchangerevo")
-        embed.set_image(url="https://cdn.shopify.com/s/files/1/0259/1948/8059/files/revo-micro_600x600.png?v=1632850458")
-        await message.channel.send(embed=embed)
+    for x in embedTriggers:
+        if x in message.content:
+            message.channel.send(embed=acquireEmbed(message.content, message.author.name))
+       
 
 @bot.command()
 async def leaderboard(ctx):
