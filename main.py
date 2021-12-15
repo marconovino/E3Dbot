@@ -56,9 +56,7 @@ async def on_connect():
 
 def acquireEmbed(message, authorName):
     if "revo" and "release" in message:
-        RAWembedTitle = revoEmbed.title 
-        RAWembedTitle.replace("authorName", authorName)
-        embedTitle = RAWembedTitle
+        embedTitle = revoEmbed.title.replace("authorName", authorName)
         embedURL = revoEmbed.url
         embedDescription = revoEmbed.description
         embedImage = revoEmbed.image
