@@ -97,6 +97,7 @@ async def on_connect():
 
 # function to build the embed according to the trigger, moved it to a function to keep it tidier
 def acquireEmbed(message, authorName):
+
     if "revo" and "release" in message:
         embedTitle = revoEmbed.title.replace("authorName", authorName) #insert authorName where you want the bot to place the name of the person who asked
         embedURL = revoEmbed.url
@@ -121,19 +122,17 @@ def acquireEmbed(message, authorName):
         embedDescription = docuEmbed.description
         embedImage = docuEmbed.image
 
-    if "support" or "help" in message:
-        embedTitle = suppEmbed.title
-        embedURL = suppEmbed.url
-        embedDescription = suppEmbed.description
-        embedImage = suppEmbed.image
+    #if "support" or "help" in message:
+        #embedTitle = suppEmbed.title
+        #embedURL = suppEmbed.url
+        #embedDescription = suppEmbed.description
+        #embedImage = suppEmbed.image
     
     if "beta" in message:
         embedTitle = betaEmbed.title
         embedURL = betaEmbed.url
         embedDescription = betaEmbed.description
         embedImage = betaEmbed.image
-
-
 
     embed = discord.Embed(title= embedTitle, url= embedURL ,description = embedDescription)
     embed.set_image(url= embedImage)
